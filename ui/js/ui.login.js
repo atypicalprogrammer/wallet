@@ -136,8 +136,13 @@ var UI = (function(UI, $, undefined) {
             UI.createStateInterval(500, false);
           } else {
             $("#login-password").val("");
-            $("#login-btn").loadingReset("logging_in", {"icon": "fa-cog fa-spin fa-fw"});
-            UI.showAppScreen();
+            $("#login-btn").loadingReset("login", {"icon": "fa-cog fa-spin fa-fw"});
+
+            if (!connection.keccak) {
+              UI.showTransitionModal();
+            } else {
+              UI.showAppScreen();
+            }
           }
         });
       }, 150);
@@ -146,6 +151,41 @@ var UI = (function(UI, $, undefined) {
     UI.handleHelpMenu();
     UI.handleNetworkSpamming();
     UI.handlePastingTrytes();
+  }
+
+  UI.showTransitionModal = function() {
+    console.log("UI.showTransitionModal");
+
+    clearInterval(loginGradientInterval);
+
+    UI.clearStateInterval();
+
+    $("#transition-modal").remodal({hashTracking: false, closeOnOutsideClick: false, closeOnEscape: false}).open();
+
+    if (connection.inApp) {
+      console.log("finished transitiong to keccak");
+      finishedTransitioningToKeccak();
+    }
+
+    /*
+    $("#transition-btn").on("click", function(e) {
+      UI.isLocked = true;
+
+      $(".remodal-close").on("click", function(e) {
+        UI.notify("error", "cannot_close_whilst_transitioning");
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    });
+
+    $("#transition-btn-stop").on("click", function(e) {
+
+    });
+
+    $("#transition-btn-continue").on("click", function(e) {
+      $("#login-password").val("");
+      $("#login-btn").loadingReset("login", {"icon": "fa-cog fa-spin fa-fw"});
+    });*/
   }
 
   UI.showAppScreen = function() {

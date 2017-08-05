@@ -100,6 +100,10 @@ var UI = (function(UI, $, undefined) {
     }, ms);
   }
 
+  UI.clearStateInterval = function() {
+    clearTimeout(updateInterval);
+  }
+
   UI.update = function() {
     if (!UI.initialConnection && connection.nodeInfo) {
       console.log("We have an initial connection.");

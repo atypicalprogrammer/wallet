@@ -1025,3 +1025,7 @@ electron.ipcRenderer.on("changeLanguage", function(event, language) {
 electron.ipcRenderer.on("relaunch", UI.relaunch);
 
 electron.ipcRenderer.on("shutdown", UI.shutdown);
+
+electron.ipcRenderer.on("finishedTransitioningToKeccak", function() {
+  UI.sendToWebview("finishedTransitioningToKeccak");
+});

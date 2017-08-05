@@ -172,6 +172,10 @@ function _clearSeedFromClipboard(seed) {
   }
 }
 
+function _finishedTransitioningToKeccak() {
+  ipcRenderer.send("finishedTransitioningToKeccak");
+}
+
 /*
 function _logUINotification(type, message) {
   ipcRenderer.send("logUINotification", type, message);
@@ -188,6 +192,7 @@ process.once("loaded", function() {
   global.relaunchApplication = _relaunchApplication;
   global.updateAppInfo = _updateAppInfo;
   global.clearSeedFromClipboard = _clearSeedFromClipboard;
+  global.finishedTransitioningToKeccak = _finishedTransitioningToKeccak;
 
   if (typeof(ccurl) != "undefined") {
     global.ccurl = ccurl;

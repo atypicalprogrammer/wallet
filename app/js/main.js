@@ -182,10 +182,13 @@ var App = (function(App, undefined) {
       if (!settings.hasOwnProperty("allowShortSeedLogin")) {
         settings.allowShortSeedLogin = 0;
       }
+      if (!settings.hasOwnProperty("keccak")) {
+        settings.keccak = 0;
+      }
     } catch (err) {
       console.log("Error reading settings:");
       console.log(err);
-      settings = {bounds: {width: 520, height: 780}, checkForUpdates: 1, lastUpdateCheck: 0, showStatusBar: 0, isFirstRun: 1, port: (isTestNet ? 14900 : 14265), udpReceiverPort: 14600, tcpReceiverPort: 15600, sendLimit: 0, nodes: [], dbLocation: "", allowShortSeedLogin: 0};
+      settings = {bounds: {width: 520, height: 780}, checkForUpdates: 1, lastUpdateCheck: 0, showStatusBar: 0, isFirstRun: 1, port: (isTestNet ? 14900 : 14265), udpReceiverPort: 14600, tcpReceiverPort: 15600, sendLimit: 0, nodes: [], dbLocation: "", allowShortSeedLogin: 0, keccak: 0};
     }
 
     try {
@@ -455,7 +458,7 @@ var App = (function(App, undefined) {
       win.webContents.on("will-navigate", handleRedirect);
     }
 
-    win.loadURL("file://" + appDirectory.replace(path.sep, "/") + "/index.html?showStatus=" + settings.showStatusBar + "&isFirstRun=" + settings.isFirstRun + "&lightWallet=" + settings.lightWallet + "&isDebug=" + (isDebug ? "1" : "0"));
+    win.loadURL("file://" + appDirectory.replace(path.sep, "/") + "/index.html?showStatus=" + settings.showStatusBar + "&isFirstRun=" + settings.isFirstRun + "&lightWallet=" + settings.lightWallet + "&keccak=" + settings.keccak + "&isDebug=" + (isDebug ? "1" : "0"));
 
     win.webContents.once("did-finish-load", function() {
       App.updateTitle(true);
@@ -1730,6 +1733,13 @@ var App = (function(App, undefined) {
     });
   }
 
+  App.finishedTransitioningToKeccak = function() {
+    console.log("finished transitioning to keccak");
+    settings.keccak = true;
+
+    App.saveSettings();
+  }
+
   App.startTrackingCPU = function() {
     if (cpuTrackInterval) {
       clearInterval(cpuTrackInterval);
@@ -2540,3 +2550,5 @@ electron.ipcMain.on("updateStatusBar", function(event, data) {
 electron.ipcMain.on("updateAppInfo", function(event, data) {
   App.updateAppInfo(data);
 });
+
+electron.ipcMain.on("finishedTransitioningToKeccak", App.finishedTransitioningToKeccak);
